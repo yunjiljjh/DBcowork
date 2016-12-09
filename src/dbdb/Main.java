@@ -108,9 +108,7 @@ public class Main {
 		preparedStmt.close();
 		st.close();
 		rs.close();
-    
-		
-
+ 
 	}
 
 }
