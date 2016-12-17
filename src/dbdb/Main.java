@@ -102,7 +102,6 @@ public class Main {
 			//read DBname
 			line = null;
 			s =null;
-			tmp=null;
 			s = br.readLine();
 			s=s.replaceAll(" ", "");
 			System.out.println(">"+s+"<");
