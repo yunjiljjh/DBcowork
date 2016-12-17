@@ -119,7 +119,7 @@ public class Main {
 			s=s.replaceAll(" ", "");
 			System.out.println(">"+s+"<");
 			line = s.split(":");
-			tmp = tmp+ "?searchpath="+line[1];
+			tmp = tmp+ "?currentSchema="+line[1];
 			System.out.println("DB_CONNECTION_URL is "+tmp);
 			DB_CONNECTION_URL = tmp;
 			
