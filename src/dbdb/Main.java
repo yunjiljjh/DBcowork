@@ -17,6 +17,7 @@ public class Main {
 
 	private static  String DB_DRIVER = "org.postgresql.Driver";
 	private static  String DB_CONNECTION_URL;
+	private static  String DB_SCHEMA;
 	private static  String DB_USER;
 	private static  String DB_PASSWORD;
 	private static FileReader fr;
@@ -110,6 +111,15 @@ public class Main {
 			System.out.println(">"+s+"<");
 			line = s.split(":");
 			tmp = tmp+ line[1];
+			
+			//read Schema
+			line = null;
+			s =null;
+			s = br.readLine();
+			s=s.replaceAll(" ", "");
+			System.out.println(">"+s+"<");
+			line = s.split(":");
+			tmp = tmp+ "?searchpath="+line[1];
 			System.out.println("DB_CONNECTION_URL is "+tmp);
 			DB_CONNECTION_URL = tmp;
 			
@@ -117,7 +127,6 @@ public class Main {
 			line = null;
 			s =null;
 			tmp=null;
-			s = br.readLine();
 			s = br.readLine();
 			s=s.replaceAll(" ", "");
 			System.out.println(">"+s+"<");
