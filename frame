@@ -1,0 +1,58 @@
+import java.util.HashMap;
+import java.util.Scanner;
+
+public class Cowork01 {
+	private boolean terminate=false;
+	public static void main(String args[]){
+		Cowork01 co=new Cowork01();
+		co.init();
+	}
+	public void setTerminate(boolean t){
+		this.terminate=t;
+	}
+	public boolean getTerminate(){
+		return this.terminate;
+	}
+	public void init(){
+		while (!getTerminate()){
+			System.out.print("Please input the instruction number (1:Import from CSV, 2:Export to CSV, 3:Manipulate Data, 4:Exit): ");
+			Scanner scan =new Scanner(System.in);
+			int input=scan.nextInt();
+			if (input==1){
+				importCSV();
+			}else if (input==2){
+				exportCSV();
+			}else if (input==3){
+				manipData();
+			}else if (input==4){
+				setTerminate(false);
+			}else{
+				System.out.println("Wrong instruction input.");
+			}
+		}
+	}
+	public static void importCSV(){
+		System.out.println("[Import from CSV]");
+		System.out.println("Please specify the filename for table description : ");
+		//파일에서 읽어와서 테이블 생성
+		System.out.println("Table is newly created as described in the file.");
+		System.out.println("Please specify the CSV filename : ");
+		int instSuccess=0;
+		int instFailure=0;
+		HashMap<Integer, String> failureMap=new HashMap<Integer, String>();
+		//csv로 읽어와서 테이블에 insert, 성공하면 instSuccess++, 실패하면 intFailure++, 실패시 실패한 라인수와 내용 hashmap으로 저장
+		System.out.println("Data import completed. (Insertion Success : "+instSuccess+", Insertion Failure : "+instFailure+")");
+		//fail한 line 저장한것 출력
+		
+	}
+	public static void exportCSV(){
+		
+	}
+	public static void manipData(){
+		
+	}
+	public static void exit(){
+		
+	}
+}
+
