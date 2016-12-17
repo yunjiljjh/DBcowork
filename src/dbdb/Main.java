@@ -40,6 +40,7 @@ public class Main {
 		//read connection text in
 		setConnection();
 
+		/*********************
 		System.out.println("============ RESULT ============");
 		while (rs.next()) {
 		    System.out.print("ID : " + rs.getString(1) + ", ");
@@ -48,17 +49,18 @@ public class Main {
 		    System.out.print("Department_ID : " + rs.getString(4));
 		    System.out.println();
 		}
-
+***************/
 		/* Update Row */
-		String UpdateSQL = "UPDATE student_table SET address = ? where ID = ?";
+		//String UpdateSQL = "UPDATE student_table SET address = ? where ID = ?";
 		
-		preparedStmt = conn.prepareStatement(UpdateSQL);
-		preparedStmt.setString(1, "addr3");
-		preparedStmt.setInt(2, 2);		
-		preparedStmt.executeUpdate();
+		//preparedStmt = conn.prepareStatement(UpdateSQL);
+		//preparedStmt.setString(1, "addr3");
+		//preparedStmt.setInt(2, 2);		
+		//preparedStmt.executeUpdate();
 
-		rs = st.executeQuery("SELECT ID, name, address, department_ID FROM student_table");
+		//rs = st.executeQuery("SELECT ID, name, address, department_ID FROM student_table");
 
+		/******************
 		System.out.println("============ RESULT ============");
 		while (rs.next()) {
 		    System.out.print("ID : " + rs.getString(1) + ", ");
@@ -67,12 +69,13 @@ public class Main {
 		    System.out.print("Department_ID : " + rs.getString(4));
 		    System.out.println();
 		}
+		*******************/
 		/* Delete Row */
-		String DeleteSQL = "DELETE FROM student_table where ID = 2";
-		st.executeUpdate(DeleteSQL);
+		//String DeleteSQL = "DELETE FROM student_table where ID = 2";
+		//st.executeUpdate(DeleteSQL);
 		
-		rs = st.executeQuery("SELECT ID, name, address, department_ID FROM student_table");
- 
+		//rs = st.executeQuery("SELECT ID, name, address, department_ID FROM student_table");
+
 	}
 
 	public static void setConnection()throws SQLException{
