@@ -1,5 +1,6 @@
 package dbdb;
 
+import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -14,10 +15,12 @@ import java.io.*;
 
 public class Main {
 
-	private static final String DB_DRIVER = "org.postgresql.Driver";
-	private static final String DB_CONNECTION_URL = "jdbc:postgresql://127.0.0.1/DBname";
-	private static final String DB_USER = "postgres";
-	private static final String DB_PASSWORD = "dddd";
+	private static  String DB_DRIVER = "org.postgresql.Driver";
+	private static  String DB_CONNECTION_URL;
+	private static  String DB_USER;
+	private static  String DB_PASSWORD;
+	private static FileReader fr;
+	private static BufferedReader br;
 	
 	static Statement st;
 	static PreparedStatement preparedStmt;
@@ -25,26 +28,17 @@ public class Main {
 	static Properties connProps;
 	static Connection conn;
 	
-	private FileReader fr;
-	private BufferedReader br;
 	
 	public static void main(String args[]) throws ClassNotFoundException, SQLException {
 		// TODO Auto-generated method stub
-
+		
+		
 		Class.forName(DB_DRIVER); //Driver class is loaded to memory
 		System.out.println("Driver loaded");
 		connProps = new Properties();
 
-		/* Setting Connection Info */
-		connProps.setProperty("user", 		DB_USER);
-		connProps.setProperty("password", 	DB_PASSWORD);
-		System.out.println("connection set");
-
-		/* Connect! */
-		conn = DriverManager.getConnection(DB_CONNECTION_URL, connProps);
-		System.out.println("connection success");
-		
-		st = conn.createStatement();
+		//read connection text in
+		setConnection();
 
 		System.out.println("============ RESULT ============");
 		while (rs.next()) {
@@ -81,6 +75,93 @@ public class Main {
  
 	}
 
+	public static void setConnection()throws SQLException{
+		String connPath = Main.class.getResource("").getPath();
+		connPath = connPath + "connection.txt";
+		System.out.println("connected with info from"+connPath+"connection.txt");
+		System.out.println(connPath);
+		
+		/*read the text file*/
+
+		try{
+			FileReader fr=new FileReader(connPath);
+			BufferedReader br=new BufferedReader(fr);
+			
+			System.out.println("read the text file");
+			
+			String tmp=null;
+			
+			//read IP address
+			String s = null;
+			s = br.readLine();
+			s=s.replaceAll(" ", "");
+			System.out.println(">"+s+"<");
+			String[] line = s.split(":");
+			tmp = "jdbc:postgresql://"+line[1] + "/";
+			
+			//read DBname
+			line = null;
+			s =null;
+			tmp=null;
+			s = br.readLine();
+			s=s.replaceAll(" ", "");
+			System.out.println(">"+s+"<");
+			line = s.split(":");
+			tmp = tmp+ line[1];
+			System.out.println("DB_CONNECTION_URL is "+tmp);
+			DB_CONNECTION_URL = tmp;
+			
+			//read ID
+			line = null;
+			s =null;
+			tmp=null;
+			s = br.readLine();
+			s = br.readLine();
+			s=s.replaceAll(" ", "");
+			System.out.println(">"+s+"<");
+			line = s.split(":");
+			tmp = line[1];
+			System.out.println("DB_USER is "+tmp);
+			DB_USER = tmp;
+			
+			//read Password
+			line = null;
+			s =null;
+			tmp=null;
+			s = br.readLine();
+			s=s.replaceAll(" ", "");
+			System.out.println(">"+s+"<");
+			line = s.split(":");
+			tmp = line[1];
+			System.out.println("DB_PASSWORD is "+tmp);
+			DB_PASSWORD = tmp;
+			
+		}catch(IOException e){
+			e.printStackTrace();
+		}finally{
+			if(br != null){
+				try{br.close();}
+				catch(IOException e){}
+			}
+			if(fr != null){
+				try{fr.close();}
+				catch(IOException e){}
+			}
+		}			
+	
+		
+		/* Setting Connection Info */
+		connProps.setProperty("user", 		DB_USER);
+		connProps.setProperty("password", 	DB_PASSWORD);
+		System.out.println("connection set");
+
+		/* Connect! */
+		conn = DriverManager.getConnection(DB_CONNECTION_URL, connProps);
+		System.out.println("connection success");
+		
+		st = conn.createStatement();
+	}
+	
 	public void mainMsg() throws IOException,FileNotFoundException, SQLException{
 		int input;
         Scanner scan = new Scanner(System.in);
