@@ -214,7 +214,7 @@ public class Main {
 								System.out.println("[Manipulate Data]");
 								System.out.println("Please input the instruction number (1: Show Tables, 2: Describe Table, 3: Select, 4: Insert, 5: Delete, 6: Update, 7: Drop Table, 8: Back to main) : "); 
 								option=scan1.nextInt();
-								switch(option1){
+								switch(option){
 								case 1: {showTables();
 										break;}
 								case 2: {describeTable();
@@ -231,7 +231,7 @@ public class Main {
 										break;}
 								case 8: {terminate=true;
 										break;}
-								break;}}}
+								}}}
 			case 4: {} break;
 			} //end of switch
 		}
