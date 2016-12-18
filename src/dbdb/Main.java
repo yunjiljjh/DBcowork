@@ -305,7 +305,7 @@ public class Main {
 		st.executeUpdate(createInsert);
 		}
 	
-	public static void exportTable(String tableName,String fileName){
+	public static void exportTable(String tableName,String fileName)throws IOException, FileNotFoundException, SQLException{
 		String exportCSV =  "COPY "+tableName+" TO '"+ currAddr.substring(1)+fileName+"' with DELIMITER ',' CSV HEADER encoding 'euc-kr'"; 
 		st.executeUpdate(exportCSV);
 	}
