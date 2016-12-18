@@ -344,7 +344,7 @@ public class Main {
 	}
 	
 public static void showTables() throws SQLException{
-	String sql="select table_name from view tables;";
+	String sql="select table_name from information_schema.tables;";
 	rs=st.executeQuery(sql);
 	System.out.println("========");
 	System.out.println("Table List");
