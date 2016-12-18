@@ -344,7 +344,7 @@ public class Main {
 	}
 	
 public static void showTables() throws SQLException{
-	String sql="select table_name from information_schema.tables;";
+	String sql="select * from information_schema.tables where table_schema='public' order by table_name;";
 	rs=st.executeQuery(sql);
 	System.out.println("========");
 	System.out.println("Table List");
@@ -358,7 +358,7 @@ public static void describeTable() throws SQLException{
 	System.out.println("================================================");
 	System.out.println("Column name | Data Type | Character Maximum Length(or Numeric Precisoin and Scale)");
 	System.out.println("================================================");
-	String preSql="select column_name, data_type, character_maximum_length, numeric_precision, numeric_scale from view columns";
+	String preSql="select column_name, data_type, character_maximum_length, numeric_precision, numeric_scale from information_schema.columns where table_name='table_name' order by column_name;";
 	String postSql="where table_name="+table+";";
 	rs=st.executeQuery(preSql+postSql);
 	int rowcount=1;
