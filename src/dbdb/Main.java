@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
-import java.util.Scanner;
+import java.util.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.*;
@@ -21,7 +21,10 @@ public class Main {
 	private static  String DB_USER;
 	private static  String DB_PASSWORD;
 	private static FileReader fr;
+	private static FileReader fr2;
 	private static BufferedReader br;
+	private static BufferedReader checkNull;
+	private static String currAddr;
 	
 	static Statement st;
 	static PreparedStatement preparedStmt;
@@ -30,9 +33,8 @@ public class Main {
 	static Connection conn;
 	
 	
-	public static void main(String args[]) throws ClassNotFoundException, SQLException {
+	public static void main(String args[]) throws IOException,FileNotFoundException, ClassNotFoundException, SQLException {
 		// TODO Auto-generated method stub
-		
 		
 		Class.forName(DB_DRIVER); //Driver class is loaded to memory
 		System.out.println("Driver loaded");
@@ -40,7 +42,8 @@ public class Main {
 
 		//read connection text in
 		setConnection();
-
+		mainMsg();
+		
 		/*********************
 		System.out.println("============ RESULT ============");
 		while (rs.next()) {
@@ -173,23 +176,26 @@ public class Main {
 		st = conn.createStatement();
 	}
 	
-	public void mainMsg() throws IOException,FileNotFoundException, SQLException{
+	public static void mainMsg() throws IOException,FileNotFoundException, SQLException{
 		int input;
         Scanner scan = new Scanner(System.in);
 		System.out.println("Please input the instruction number (1: Import from CSV, 2: Export to CSV, 3: Manipulate Data, 4: Exit) :");
 		input = scan.nextInt(); //get num from keyboard
 		
-		String tableName, fileName;
+		String tableName, tableDescription, fileName;
 		int option;
 		switch(input){
 			case 1: {System.out.println("[Import from CSV]");
 							System.out.println("Please specify the filename for table description : "); 
-							tableName = scan.nextLine();
+							scan.nextLine();
+							tableDescription = scan.nextLine();
+							System.out.println("입력된 값 : "+tableDescription);
 							System.out.println("Please specify the CSV filename : "); 
 							fileName = scan.nextLine();
-							createTable(tableName,fileName);
+							System.out.println("입력된 값 : "+fileName);
+							createTable(tableDescription,fileName);
 							System.out.println("Table is newly created as described in the file.");
-							tableName=null;
+							tableDescription=null;
 							fileName=null;
 							break;}
 			case 2: {System.out.println("[Export to CSV]");
@@ -197,7 +203,7 @@ public class Main {
 							tableName = scan.nextLine();
 							System.out.println("Please specify the CSV filename : "); 
 							fileName = scan.nextLine();
-							//exportTable(tableName,fileName ,infoArray)
+							exportTable(tableName,fileName);
 							System.out.println("Data export completed.");
 							tableName=null;
 							fileName=null;
@@ -213,13 +219,13 @@ public class Main {
 											break;}
 							case 3: {//select();
 											break;}
-							case 4: {insertTuple();
+							case 4: {//insertTuple();
 											break;}
 							case 5: {//delete();
 											break;}
 							case 6: {//update();
 											break;}
-							case 7: {dropTable();
+							case 7: {//dropTable();
 											break;}
 							case 8: {//back to main -> do nothing and return to the main home
 											break;}
@@ -229,22 +235,82 @@ public class Main {
 			} //end of switch
 		}
 	
-	public void createTable(String tableName, String fileName) throws IOException, FileNotFoundException, SQLException {		
+	public static void createTable(String tableDescription, String fileName) throws IOException, FileNotFoundException, SQLException {		
 		String CreateTableSQL = "CREATE TABLE tableName ";
 		String filePath;
-	    //filePath = fileName으로 경로 만들어서
-		fr=new FileReader(fileName);
+		currAddr = Main.class.getResource("").getPath();
+		String txtAddr  = currAddr + tableDescription;
+		System.out.println("읽을주소는 : "+txtAddr );
+		fr=new FileReader(txtAddr);
 		br=new BufferedReader(fr);
-		String s = br.readLine();
-		String[] a = s.split(",");
+		fr2=new FileReader(txtAddr);
+		checkNull=new BufferedReader(fr2);
 		
-		CreateTableSQL +=
-				"(" + a[0]+"변수타입"+", " + //읽어들인 파일로 나머지 string 만들고
-				"primary key ("+ "프라이머리 키 인 attribute"+"))";
-		st.executeUpdate(CreateTableSQL);
+		String s , notNull=null;
+		String tmpSQL =null; 
+		String[] a=null;
+		String[] notNullarr = null;
+		String nulldes = null;
+		String tableName = null;
+		int colNum=0;
+		
+		while((s=checkNull.readLine())!=null){
+			notNull=s;}
+		System.out.println(" not null info line : "+notNull);
+		notNull=notNull.replaceAll(" ", "");
+		a = notNull.split(":");
+		notNullarr = a[1].split(",");
+		
+		while((s=br.readLine())!=null){
+		s=s.replaceAll(" ", "");
+		System.out.println(">"+s+"<");
+		a = s.split(":");
+		if(a[0].equals("Name")){
+			System.out.println("table name set");
+			tableName = a[1];
+			tmpSQL= "CREATE TABLE "+a[1]+"(";
+			a=null;}
+		else if(a[0].substring(0, 2).equals("Co")){
+			colNum++;
+			tmpSQL=tmpSQL+a[1]+" "; //col Name 저장
+			System.out.println("col name set");
+			//not null인지 확인
+			for (int i = 0; i <notNullarr.length;i++){
+				if(a[1].equals(notNullarr[i])){
+					nulldes = " not null";
+					System.out.println("not null found");
+				}
+			}
+			a=null;
+			s = br.readLine();
+			s=s.replaceAll(" ", "");
+			System.out.println(">"+s+"<");
+			a = s.split(":");
+			tmpSQL=tmpSQL+a[1];//col data type 저장
+			System.out.println("col data type set");	
+			tmpSQL=tmpSQL+nulldes;
+			tmpSQL+=", ";
+			nulldes = null;
+		} 
+		else if(a[0].equals("PK")){
+			tmpSQL=tmpSQL+"primary key ("+a[1]+")";}
+		else{}
+		}
+		tmpSQL+=")";
+		
+		System.out.println("finall SQL line : "+ tmpSQL);
+		st.executeUpdate(tmpSQL);
+		
+		String createInsert = "COPY "+tableName+" FROM '"+ currAddr.substring(1)+fileName+"' with DELIMITER ',' CSV HEADER encoding 'euc-kr'";
+		st.executeUpdate(createInsert);
 		}
 	
-	public void dropTable() throws SQLException{
+	public static void exportTable(String tableName,String fileName){
+		String exportCSV =  "COPY "+tableName+" TO '"+ currAddr.substring(1)+fileName+"' with DELIMITER ',' CSV HEADER encoding 'euc-kr'"; 
+		st.executeUpdate(exportCSV);
+	}
+	
+ 	public void dropTable() throws SQLException{
 		/* Drop table */
 		String DropTableSQL = "DROP TABLE student_table";
 		st.executeUpdate(DropTableSQL);

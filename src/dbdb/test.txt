@@ -1,0 +1,7 @@
+Name : test
+Column : c1
+Column Data Type : integer
+Column 2 : c2
+Column Data Type : varchar(10)
+PK : c1, c2
+Not NULL : c1, c2

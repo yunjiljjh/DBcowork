@@ -1,5 +1,5 @@
-IP : 121.134.229.197
+IP : 127.0.0.1
 DB_NAME : postgres
-SCHEMA_NAME : testSchema
+SCHEMA_NAME : public
 ID : postgres
-PW : dddd
+PW : 1234
